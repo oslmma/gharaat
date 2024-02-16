@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% if user.is_authenticated %}
+    {% block style %}
+        /* nav {
+            background-color: #3F72AF;
+        } */
+        body{
+            background-color: #FEBE8C;
+        }
+        #my-score
+        {
+            background-color: #FFFBC1;
+        }
+        .fa-solid
+        {
+            color: #B83B5E;
+        }
+        .navbar{
+            color: #B83B5E;
+        }
+    {% endblock style %}
+   {% block body %}
+    <nav class="navbar navbar-expand-lg" id="my-score">
+        <div class="container-fluid h2 p-2 justify-content-around rounded-3">
+            طرح فرهنگی مسجد جامع
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid text-light px-2 justify-content-around">
+            <p class="text-light p-1 bg-success rounded-2 px-2 shadow" id="hadis">
+                امام على عليه السلام
+            </p>
+            <p class="text-light bg-success p-1 bg- rounded-2 px-2 shadow" id="hadis">
+                از دست دادن فرصت، مايه اندوه است.
+            </p>
+        </div>
+    </nav>
+
+    <div class="container-fluid" >
+        <div class="row-cols-1 g-2">
+            <a href="{% url "profile" student.pk%}" class="text-decoration-none">
+                <div class="col text-center mx-1 rounded pt-3 shadow" id="my-score">
+                    <i class="fa-solid fa-user fa-3x"></i>
+                    <p class="text-dark py-3"> امتیازات من </p>
+                </div>
+            </a>
+            {% comment %} <a href="{% url "top" %}" class="text-decoration-none"> {% endcomment %}
+            <a href="{% url "top-cs" %}" class="text-decoration-none">
+                <div class="col text-center mx-1 rounded pt-3 shadow" id="my-score">
+                    <i class="fa-solid fa-ranking-star fa-3x"></i>
+                    <p class="text-dark py-3"> نفرات برتر <p>
+                </div>
+            </a>
+            <a href="{% url "jozve" %}" class="text-decoration-none">
+                <div class="col text-center mx-1 rounded pt-3 shadow" id="my-score">
+                    <i class="fa-solid fa-book fa-3x"></i>
+                    <p class="text-dark py-3"> جزوات </p>
+                </div>
+            </a>
+        </div>
+    </div>
+            <a class="flex-right" href="{% url "logout" %}">
+                <i class="fas fa-sign-out-alt btn"></i>
+            </a>
+
+    <script>
+        const x = document.getElementById("my-score");
+        
+    </script>
+{% endblock body %} 
+{% else %}
+
+{% endif %}

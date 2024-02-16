@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" crossorigin="anonymous"></script>
+{% endblock head %}
+
+{% block title %} profile {% endblock title %}
+{% block style %}
+  .gradient-custom-2 {
+
+            /* fallback for old browsers */
+            background: #fbc2eb;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1));
+        }
+
+{% endblock style %}
+{% if user.is_authenticated %}
+{% block body %}
+    <!-- <section class="vh-100" style="background-color: #9de2ff;"> -->
+    <!-- <section class="vh-100 gradient-custom-2"> -->
+    <!-- <section class=" bg-secondary"> -->
+    <section class="gradient-custom-2">
+  <div class="container py-2">
+    {% comment %} <div class="row d-flex  justify-content-center align-items-center h-100"> {% endcomment %}
+    <div class="row d-flex py-2 justify-content-center align-items-center">
+      <div class="col col-md-9 col-lg-7 col-xl-5">
+        <div class="card" style="border-radius: 15px;">
+          <div class="card-body p-4">
+            <div class="d-flex text-black">
+              <div class="flex-shrink-2">
+                {% if student.pic %}
+                  <img src="{{ student.pic.url }}"
+                    alt="Generic placeholder image" class="img-fluid shadow"
+                    style="width: 150px; border-radius: 10px; height: 150px; z-index: 1;">
+                  {% else %}
+                    <div class="bg-secondary shadow"style="width: 150px; border-radius: 10px; height: 150px; z-index: 1;">
+                    </div>
+                {% endif %}
+              </div>
+              <div class="flex-grow-2 me-3 align-items-center my-auto">
+                <h5 class="mb-1"> {{ student.user.first_name }}  {{ student.user.last_name }} </h5>
+                <p class="mb-2 pb-1" style="color: #2b2a2a;"> متوسطه </p>
+                <!-- <div class="d-flex justify-content-start rounded-3 p-2 mb-2 "
+                  style="background-color: #efefef;"> -->
+                <div class="d-flex justify-content-center rounded-3 p-2 mb-2 bg-secondary text-light ">
+                  <div class="">
+                    <h1 class="small mb-1"> امتیاز کل </h1>
+                    <p class="mb-0 text-center"> {{ student.score_all }} </p>
+                  </div>
+                  <!-- <div class="px-3">
+                    <p class="small text-muted mb-1">  </p>
+                    <p class="mb-0 text-center">  </p>
+                  </div>
+                  <div>
+                    <p class="small text-muted mb-1"> رتبه </p>
+                    <p class="mb-0 text-center"> 1 </p>
+                  </div> -->
+                </div>
+                <!-- <div class="d-flex pt-1">
+                  <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                  <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="container p-1">
+        <div class="bg-light rounded-2 mx-2">
+            <canvas id="allScoreChart"></canvas>
+        </div>
+    </div>
+    <div class="container p-1" style="height: 140 px;">
+        <div class="bg-light rounded-2 mx-2">
+            <div class="py-2 text-center bg-danger text-light rounded-3" id="no-data"> هنوز اطلاعاتی در قسمت امتیازات ماهانه ثبت نشده است </div>
+            <canvas id="detailScoreChart"></canvas>
+             </div>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('allScoreChart');
+  var data = JSON.parse("{{ mdata | escapejs }}");
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['فروردین', 'اردیبهشت', 'خرداد','تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
+      datasets: [{
+        label: 'امتیاز کل به ماه',
+        data: data,
+        borderWidth: 2,
+        borderColor: '#36A22B',
+        backgroundColor: '#9B33F5'
+      }]
+    },
+     options: {
+       scales: {
+         y: {
+           beginAtZero: true
+         }
+       }
+     }
+  });
+</script>
+<script>
+  const dtx = document.getElementById('detailScoreChart');
+  var data = JSON.parse("{{ ddata | escapejs }}")
+
+  new Chart(dtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['نماز جماعت', 'قرائت قرآن', 'برنامه های پایگاه', 'جلسات احیاء نماز'],
+      datasets: [{
+        data: data,
+        borderWidth: 1,
+        
+      //   backgroundColor: [
+      //   'rgba(255, 99, 132, 0.2)',
+      //   'rgba(54, 162, 235, 0.2)',
+      //   'rgba(255, 206, 86, 0.2)',
+      //   'rgba(75, 192, 192, 0.2)',
+      //   'rgba(153, 102, 255, 0.2)',
+      //   'rgba(255, 159, 64, 0.2)'
+      // ],
+      }]
+    },
+    options: {  
+                title: {
+                    display: false,
+                    text: 'Overall Activity'
+                  },
+                  animation: {
+                    onComplete: function(animation) {
+                      var firstSet = animation.chart.config.data.datasets[0].data,
+                        dataSum = firstSet.reduce((accumulator, currentValue) => accumulator + currentValue);
+
+                      if (typeof firstSet !== "object" || dataSum === 0) {
+                        document.getElementById('no-data').style.display = 'block';
+                        document.getElementById('detailScoreChart').style.display = 'none'
+                      }
+                    }
+  }
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+    // options: {
+    //   scales: {
+    //     y: {
+    //       beginAtZero: true
+    //     }
+    //   }
+    // }
+  });
+</script>
+{% endblock body %}
+
+{% else %}
+
+<div class="container h-100">
+    <div class="mx-auto">
+        شما هنوز ثبت نشده اید لطفا به مسدولین مربوطه مراجعه فرمایید.
+    </div>
+</div>
+
+{% endif %}

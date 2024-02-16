@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block style %}
+body{
+    font-family: "Vazirmatn", sans;
+    background-image: url("https://static.neshanmap.ir/places/images/687/128349_282280--%D9%85%D8%B3%D8%AC%D8%AF-%D8%AC%D8%A7%D9%85%D8%B9-%D9%85%D8%AD%D9%85%D8%AF%D8%A2%D8%A8%D8%A7%D8%AF-%D9%85%D8%B1%DA%A9%D8%B2%DB%8C.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.card-header{
+    background-color: #226646;
+}
+.card-body{
+    background-color: #448638;
+
+}
+{% endblock style %}
+
+
+{% block body %}
+{% for file in files %}
+
+<div class="row m-2 text-center">
+  <div class="col">
+    <div class="card">
+      <div class="card-header fw-bold text-light">
+            {{ file.title }} 
+      </div>
+      <div class="card-body">
+          <div class="text-center">
+              <p class="text-light"> {{file.description}} </p>
+        </div>
+      <div class=" border-0 ms-2 d-flex justify-content-around">
+        <a class="btn btn-secondary" href="{{ file.jozve.url }}">
+             دانلود  <i class="fas fa-light fa-circle-down "></i>
+        </a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock body %}
